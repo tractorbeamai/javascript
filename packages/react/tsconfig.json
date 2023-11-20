@@ -6,7 +6,11 @@
     "lib": ["dom", "ES2015"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "target": "es6"
+    "target": "es6",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["."],
   "exclude": ["dist", "node_modules"]
