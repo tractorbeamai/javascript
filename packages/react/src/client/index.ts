@@ -1,2 +1,3 @@
-export { Logo } from './logo';
+import '@/styles.css';
+
 export { Sources } from './sources';

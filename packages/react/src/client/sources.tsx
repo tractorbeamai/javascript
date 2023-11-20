@@ -1,7 +1,9 @@
+'use client';
+
 import { useState } from 'react';
 
 import { cn } from '@/lib/utils';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/ui/button';
 import {
   Card,
   CardContent,
@@ -9,8 +11,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from './ui/input';
+} from '@/ui/card';
+import { Input } from '@/ui/input';
 import { CheckCircle, ExternalLink } from 'lucide-react';
 
 const CONFIG = {
