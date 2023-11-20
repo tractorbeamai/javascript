@@ -1,7 +1,21 @@
 {
   "name": "@tractorbeamai/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "homepage": "https://tractorbeam.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tractorbeamai/javascript.git",
+    "directory": "packages/react"
+  },
   "license": "MIT",
+  "author": "Tractorbeam AI",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
