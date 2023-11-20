@@ -5,7 +5,12 @@ import path from 'path';
 export default defineConfig((options: Options) => ({
   treeshake: true,
   splitting: true,
-  entry: ['src/server/index.ts', 'src/client/index.ts', 'src/hooks/index.ts'],
+  entry: [
+    'src/server/index.ts',
+    'src/client/index.ts',
+    'src/hooks/index.ts',
+    'src/styles.css',
+  ],
   format: ['esm', 'cjs'],
   dts: true,
   minify: true,
