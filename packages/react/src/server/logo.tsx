@@ -1,3 +1,3 @@
 export function Logo() {
-  return <div>Tractorbeam</div>;
+  return <div className="root">Tractorbeam</div>;
 }

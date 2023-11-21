@@ -113,11 +113,15 @@ function SourceCardAction({
 
 function SourceCard({ source }: { source: Source }) {
   return (
-    <div className={cn('flex items-center p-3 gap-3 text-sm bg-white')}>
-      <div className="h-6 w-6 ml-2">
+    <div
+      className={cn(
+        'tb-flex tb-items-center tb-p-3 tb-gap-3 tb-text-sm tb-bg-white',
+      )}
+    >
+      <div className="tb-h-6 tb-w-6 tb-ml-2">
         <img src={source.iconSrc} alt={`${source.name} Icon`} />
       </div>
-      <div className="font-semibold flex-1">{source.name}</div>
+      <div className="tb-font-semibold tb-flex-1">{source.name}</div>
       <SourceCardAction
         status={source.status}
         onConnect={() => console.log('connect')}
@@ -189,7 +193,7 @@ function SourceOAuth2Start() {
   if (!source) return null;
 
   return (
-    <Card className="tb-shadow-xl tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
+    <Card className="root tb-shadow-xl tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
       <CardHeader>
         <CardTitle>Connect to {source.name}</CardTitle>
         <CardDescription>
