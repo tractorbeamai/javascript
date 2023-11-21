@@ -115,7 +115,7 @@ function SourceCard({ source }: { source: Source }) {
   return (
     <div
       className={cn(
-        'tb-flex tb-items-center tb-p-3 tb-gap-3 tb-text-sm tb-bg-white',
+        'root tb-flex tb-items-center tb-p-3 tb-gap-3 tb-text-sm tb-bg-white',
       )}
     >
       <div className="tb-h-6 tb-w-6 tb-ml-2">
@@ -134,7 +134,7 @@ function SourceCardList({ query }: { query: string }) {
   const sources = useSources();
 
   return (
-    <div className="tb-flex-1 tb-border tb-rounded-lg tb-divide-y tb-overflow-y-auto">
+    <div className="root tb-flex-1 tb-border tb-rounded-lg tb-divide-y tb-overflow-y-auto">
       {sources
         .filter((source) =>
           source.name.toLowerCase().includes(query.toLowerCase()),
@@ -156,7 +156,7 @@ function ListSources() {
   const [query, setQuery] = useState('');
 
   return (
-    <Card className="tb-shadow-xl tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
+    <Card className="root tb-shadow-xl tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
       <CardHeader>
         <CardTitle>Connect Data Sources</CardTitle>
         <CardDescription>
@@ -241,7 +241,7 @@ function SourceOauth2Complete() {
   if (!source) return null;
 
   return (
-    <Card className="tb-shadow-xl tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
+    <Card className="root tb-shadow-xl tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
       <CardHeader>
         <CardTitle>Connection Successful</CardTitle>
         <CardDescription>
@@ -274,7 +274,7 @@ function SourceOauth2Complete() {
 
 export function Sources() {
   return (
-    <div className="tb-m-10 tb-w-full tb-flex tb-gap-10 tb-antialiased">
+    <div className="root tb-m-10 tb-w-full tb-flex tb-gap-10 tb-antialiased">
       <ListSources />
       <SourceOAuth2Start />
       <SourceOauth2Complete />
