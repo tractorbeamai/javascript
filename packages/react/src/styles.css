@@ -71,6 +71,7 @@
     @apply tb-border-border;
   }
 
+  /* Tailwind Preflight */
   .root blockquote,
   .root dl,
   .root dd,
@@ -87,8 +88,7 @@
     margin: 0;
   }
 
-  /* Tailwind Preflight */
-  .root h1,
+  /* .root h1,
   .root h2,
   .root h3,
   .root h4,
@@ -96,7 +96,7 @@
   .root h6 {
     font-size: inherit;
     font-weight: inherit;
-  }
+  } */
 
   .root ol,
   .root ul {

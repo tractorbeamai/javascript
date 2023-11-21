@@ -206,7 +206,7 @@ function SourceOAuth2Start() {
             <img src={source.iconSrc} alt={`${source.name} Icon`} />
           </div>
 
-          <div className="tb-h-[2px] tb-bg-ring w-12"></div>
+          <div className="tb-h-[2px] tb-bg-ring tb-w-12"></div>
 
           <div className="tb-w-24 tb-p-4 tb-rounded-lg tb-bg-white tb-z-10 tb-border tb-shadow-sm">
             <img
