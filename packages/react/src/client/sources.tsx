@@ -80,7 +80,7 @@ function useSource(id: number): Source | null {
   return useSources().find((source) => source.id === id) ?? null;
 }
 
-function SourceCardAction({
+function DataSourceAction({
   status,
   onConnect,
 }: {
@@ -111,7 +111,7 @@ function SourceCardAction({
   }
 }
 
-function SourceCard({ source }: { source: Source }) {
+function DataSourceListItem({ source }: { source: Source }) {
   return (
     <div
       className={cn(
@@ -122,7 +122,7 @@ function SourceCard({ source }: { source: Source }) {
         <img src={source.iconSrc} alt={`${source.name} Icon`} />
       </div>
       <div className="tb-font-semibold tb-flex-1">{source.name}</div>
-      <SourceCardAction
+      <DataSourceAction
         status={source.status}
         onConnect={() => console.log('connect')}
       />
@@ -130,7 +130,7 @@ function SourceCard({ source }: { source: Source }) {
   );
 }
 
-function SourceCardList({ query }: { query: string }) {
+function DataSourceList({ query }: { query: string }) {
   const sources = useSources();
 
   return (
@@ -146,8 +146,24 @@ function SourceCardList({ query }: { query: string }) {
           return 0;
         })
         .map((source) => (
-          <SourceCard key={source.id} source={source} />
+          <DataSourceListItem key={source.id} source={source} />
         ))}
+    </div>
+  );
+}
+
+function ConnectionManagerFooter() {
+  return (
+    <div className="tb-flex-col tb-gap-3 tb-items-start">
+      <p className="text-sm">
+        Powered by{' '}
+        <a
+          href="//wadefletcher.com"
+          className="tb-text-primary tb-font-semibold"
+        >
+          Tractorbeam
+        </a>
+      </p>
     </div>
   );
 }
@@ -170,18 +186,10 @@ function ListSources() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <SourceCardList query={query} />
+        <DataSourceList query={query} />
       </CardContent>
-      <CardFooter className="tb-flex-col tb-gap-3 tb-items-start">
-        <p className="text-sm">
-          Powered by{' '}
-          <a
-            href="//wadefletcher.com"
-            className="tb-text-primary tb-font-semibold"
-          >
-            Tractorbeam
-          </a>
-        </p>
+      <CardFooter>
+        <ConnectionManagerFooter />
       </CardFooter>
     </Card>
   );
@@ -193,7 +201,7 @@ function SourceOAuth2Start() {
   if (!source) return null;
 
   return (
-    <Card className="root tb-shadow-xl tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
+    <Card className="root border tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
       <CardHeader>
         <CardTitle>Connect to {source.name}</CardTitle>
         <CardDescription>
@@ -201,35 +209,30 @@ function SourceOAuth2Start() {
         </CardDescription>
       </CardHeader>
       <CardContent className="tb-flex-1 tb-flex tb-flex-col tb-gap-6">
-        <div className="tb-flex-1 tb-flex tb-items-center tb-justify-center tb-h-full tb-bg-secondary tb-rounded-lg tb-border tb-shadow-inner">
-          <div className="tb-w-24 tb-p-4 tb-rounded-lg tb-border tb-bg-white tb-z-10 tb-shadow-sm">
+        <div className="tb-flex-1 tb-flex tb-items-center tb-justify-center tb-h-full tb-bg-secondary tb-rounded-lg tb-border">
+          <div className="tb-w-24 tb-p-4 tb-rounded-lg tb-border tb-bg-white tb-z-10">
             <img src={source.iconSrc} alt={`${source.name} Icon`} />
           </div>
 
           <div className="tb-h-[2px] tb-bg-ring tb-w-12"></div>
 
-          <div className="tb-w-24 tb-p-4 tb-rounded-lg tb-bg-white tb-z-10 tb-border tb-shadow-sm">
+          <div className="tb-w-24 tb-p-4 tb-rounded-lg tb-bg-white tb-z-10 tb-border">
             <img
               src={'https://logo.clearbit.com/github.com'}
               alt="GitHub Icon"
             />
           </div>
         </div>
+        <Button variant="secondary" className="w-full">
+          Back
+        </Button>
         <a href={source.connectLink} className={cn(buttonVariants(), 'w-full')}>
           Continue to {source.name}
           <ExternalLink className="tb-w-4 tb-h-4 tb-mb-0.5 tb-ml-1" />
         </a>
       </CardContent>
-      <CardFooter className="tb-flex-col tb-gap-3 tb-items-start">
-        <p className="text-sm ">
-          Powered by{' '}
-          <a
-            href="//wadefletcher.com"
-            className="tb-text-primary tb-font-semibold"
-          >
-            Tractorbeam
-          </a>
-        </p>
+      <CardFooter>
+        <ConnectionManagerFooter />
       </CardFooter>
     </Card>
   );
@@ -241,7 +244,7 @@ function SourceOauth2Complete() {
   if (!source) return null;
 
   return (
-    <Card className="root tb-shadow-xl tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
+    <Card className="root border tb-h-[32rem] tb-w-[24rem] tb-flex tb-flex-col">
       <CardHeader>
         <CardTitle>Connection Successful</CardTitle>
         <CardDescription>
@@ -250,23 +253,15 @@ function SourceOauth2Complete() {
       </CardHeader>
       <CardContent className="tb-flex-1 tb-flex-col tb-flex tb-gap-3">
         <div className="tb-flex-1 tb-flex tb-justify-center tb-items-center">
-          <div className="tb-rounded-full tb-p-6 tb-bg-primary/10">
+          <div className="tb-rounded-full tb-p-6 tb-bg-zinc-50">
             <CheckCircle className="tb-w-8 tb-h-8 tb-text-primary" />
           </div>
         </div>
         <Button variant="secondary">Add Another Data Source</Button>
         <Button>Done</Button>
       </CardContent>
-      <CardFooter className="tb-flex-col tb-gap-3 tb-items-stretch">
-        <p className="tb-text-sm ">
-          Powered by{' '}
-          <a
-            href="//wadefletcher.com"
-            className="tb-text-primary tb-font-semibold"
-          >
-            Tractorbeam
-          </a>
-        </p>
+      <CardFooter>
+        <ConnectionManagerFooter />
       </CardFooter>
     </Card>
   );
