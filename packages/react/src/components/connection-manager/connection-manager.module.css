@@ -1,0 +1,82 @@
+.root {
+    display: flex;
+    height: 30rem;
+    width: 25rem;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    font-family: sans-serif;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.description {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.provider {
+    list-style: disc;
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 0.2rem;
+}
+
+.providerLogo {
+    width: 2rem;
+    height: 2rem;
+}
+
+.largeLogo {
+    width: 6rem;
+    height: 6rem;
+}
+
+.providerName {
+    flex: 1;
+}
+
+.providerButton {
+    margin-left: 1rem;
+}
+
+.connectButton {
+}
+
+.listError {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: red;
+}
+
+.listLoading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.listEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.footer {
+}

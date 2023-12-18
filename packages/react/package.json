@@ -1,57 +1,64 @@
 {
-  "name": "@tractorbeamai/react",
-  "version": "0.1.9",
-  "homepage": "https://tractorbeam.ai",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tractorbeamai/javascript.git",
-    "directory": "packages/react"
-  },
-  "license": "MIT",
-  "author": "Tractorbeam AI",
-  "sideEffects": [
-    "dist/index.css"
-  ],
-  "exports": {
-    "./client": {
-      "import": "./dist/client/index.mjs",
-      "require": "./dist/client/index.js",
-      "types": "./dist/client/index.d.ts"
+    "name": "@tractorbeamai/react",
+    "version": "0.1.9",
+    "homepage": "https://tractorbeam.ai",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tractorbeamai/javascript.git",
+        "directory": "packages/react"
     },
-    "./server": {
-      "import": "./dist/server/index.mjs",
-      "require": "./dist/server/index.js",
-      "types": "./dist/server/index.d.ts"
+    "license": "MIT",
+    "author": "Tractorbeam AI",
+    "main": "dist/index.js",
+    "module": "dist/index.esm.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c --watch",
+        "storybook": "storybook dev -p 6006",
+        "build-storybook": "storybook build"
     },
-    "./hooks": {
-      "import": "./dist/hooks/index.mjs",
-      "require": "./dist/hooks/index.js",
-      "types": "./dist/hooks/index.d.ts"
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^25.0.7",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^11.1.5",
+        "@storybook/addon-essentials": "^7.6.4",
+        "@storybook/addon-interactions": "^7.6.4",
+        "@storybook/addon-links": "^7.6.4",
+        "@storybook/addon-onboarding": "^1.0.10",
+        "@storybook/blocks": "^7.6.4",
+        "@storybook/react": "^7.6.4",
+        "@storybook/react-vite": "^7.6.4",
+        "@storybook/test": "^7.6.4",
+        "@tractorbeamai/backend": "workspace:*",
+        "@types/node": "^18.17.0",
+        "@types/react": "*",
+        "@types/react-dom": "*",
+        "@types/rollup-plugin-peer-deps-external": "^2.2.4",
+        "prop-types": "^15.8.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "rollup": "^4.8.0",
+        "rollup-plugin-bundle-size": "^1.0.3",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-dts": "^6.1.0",
+        "rollup-plugin-peer-deps-external": "^2.2.4",
+        "rollup-plugin-styles": "^4.0.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-typescript2": "^0.36.0",
+        "storybook": "^7.6.4",
+        "swr": "^2.2.4",
+        "tslib": "^2.6.2",
+        "tsup": "^8.0.0",
+        "typescript-plugin-css-modules": "^5.0.2",
+        "vite-tsconfig-paths": "^4.2.2"
     },
-    "./styles.css": "./dist/styles.css"
-  },
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch"
-  },
-  "devDependencies": {
-    "@radix-ui/react-slot": "^1.0.2",
-    "@types/node": "^18.17.0",
-    "@types/react": "*",
-    "@types/react-dom": "*",
-    "autoprefixer": "^10.4.16",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
-    "lucide-react": "^0.292.0",
-    "postcss": "^8.4.31",
-    "swr": "^2.2.4",
-    "tailwind-merge": "^2.0.0",
-    "tailwindcss": "^3.3.5",
-    "tailwindcss-animate": "^1.0.7",
-    "tsup": "^8.0.0"
-  },
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
-  }
+    "peerDependencies": {
+        "react": ">=18",
+        "react-dom": ">=18"
+    },
+    "dependencies": {
+        "jose": "^5.1.3"
+    }
 }

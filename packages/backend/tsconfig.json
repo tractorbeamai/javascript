@@ -1,23 +1,13 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
-        "jsx": "react-jsx",
         "lib": ["dom", "dom.iterable", "ESNext"],
         "module": "ESNext",
         "moduleResolution": "Node",
         "allowSyntheticDefaultImports": true,
         "target": "es6",
-        "baseUrl": "src",
-        "paths": {
-            "@/*": ["./*"]
-        },
         "declaration": true,
-        "declarationDir": "dist/types",
-        "plugins": [
-            {
-                "name": "typescript-plugin-css-modules"
-            }
-        ]
+        "declarationDir": "dist/types"
     },
     "include": ["."],
     "exclude": ["dist", "node_modules"]
