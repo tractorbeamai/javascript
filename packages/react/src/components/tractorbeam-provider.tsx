@@ -23,6 +23,7 @@ export type TractorbeamTheme = {
     mutedColor?: string;
     borderColor?: string;
     errorColor?: string;
+    radius?: string;
 };
 
 const defaultTheme: TractorbeamTheme = {
@@ -32,6 +33,7 @@ const defaultTheme: TractorbeamTheme = {
     secondaryForegroundColor: "hsl(240 5.9% 10%)",
     borderColor: "#eaeaea",
     errorColor: "red",
+    radius: "0.4rem",
 };
 
 type TractorbeamProviderProps = Pick<TractorbeamConfig, "token"> &

@@ -8,6 +8,7 @@
     font-family: sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    border-radius: var(--tb-radius);
 }
 
 button {
@@ -26,6 +27,7 @@ button {
     color: var(--tb-primary-foreground-color);
     background-color: var(--tb-primary-color);
     border-width: 0;
+    border-radius: var(--tb-radius);
 }
 
 .primaryButton {
