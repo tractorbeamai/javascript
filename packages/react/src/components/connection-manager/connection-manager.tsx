@@ -120,6 +120,7 @@ function ConnectionsList({
     onClickEdit: (connectionId: number) => void;
 }) {
     const { connections, error } = useConnections();
+    const { apiURL } = useTractorbeamConfig();
 
     if (error) {
         return <div className={styles.listError}>{error.message}</div>;
@@ -137,7 +138,7 @@ function ConnectionsList({
         return (
             <div className={styles.listEmpty}>
                 <p>No connections.</p>
-                <button className={styles.connectButton} onClick={onClickAdd}>
+                <button className={styles.bigButton} onClick={onClickAdd}>
                     Add Connection
                 </button>
             </div>
@@ -146,11 +147,14 @@ function ConnectionsList({
 
     return (
         <>
-            <ul>
+            <ul className={styles.providerList}>
                 {filteredConnections.map((connection) => (
                     <li key={connection.id}>
                         <div className={styles.provider}>
-                            {/*<img className={styles.provider.logo} />*/}
+                            <img
+                                className={styles.providerLogo}
+                                src={`${apiURL}${connection.provider.logo}`}
+                            />
                             <div className={styles.providerName}>
                                 {toTitleCase(connection.provider.name)}
                             </div>
@@ -164,7 +168,7 @@ function ConnectionsList({
                     </li>
                 ))}
             </ul>
-            <button className={styles.connectButton} onClick={onClickAdd}>
+            <button className={styles.bigButton} onClick={onClickAdd}>
                 Add Connection
             </button>
         </>
@@ -179,6 +183,7 @@ function AddConnection({
     onClickConnect: (providerConfigId: number) => void;
 }) {
     const { providers, error } = useProviders();
+    const { apiURL } = useTractorbeamConfig();
 
     if (error) {
         return <div className={styles.listError}>{error.message}</div>;
@@ -192,7 +197,11 @@ function AddConnection({
         return (
             <div className={styles.listEmpty}>
                 <p>No Providers Configured.</p>
-                <button className={styles.connectButton} onClick={onClickBack}>
+                <button
+                    style={{ marginTop: "0.5rem" }}
+                    className={styles.secondaryButton}
+                    onClick={onClickBack}
+                >
                     Back
                 </button>
             </div>
@@ -201,11 +210,14 @@ function AddConnection({
 
     return (
         <>
-            <ul>
+            <ul className={styles.providerList}>
                 {providers.map((p) => (
                     <li key={p.providerConfigId}>
                         <div className={styles.provider}>
-                            {/*<img className={styles.provider.logo} />*/}
+                            <img
+                                className={styles.providerLogo}
+                                src={`${apiURL}${p.provider.logo}`}
+                            />
                             <div className={styles.providerName}>
                                 {toTitleCase(p.provider.name)}
                             </div>
@@ -221,7 +233,10 @@ function AddConnection({
                     </li>
                 ))}
             </ul>
-            <button className={styles.connectButton} onClick={onClickBack}>
+            <button
+                className={`${styles.bigButton} ${styles.secondaryButton}`}
+                onClick={onClickBack}
+            >
                 Back
             </button>
         </>
@@ -313,7 +328,11 @@ function ConfigureOAuth2Connection({
                 >
                     Disconnect {toTitleCase(connection.provider.name)}
                 </button>
-                <button style={{ marginTop: "0.5rem" }} onClick={onClickBack}>
+                <button
+                    style={{ marginTop: "0.5rem" }}
+                    className={styles.secondaryButton}
+                    onClick={onClickBack}
+                >
                     Back
                 </button>
             </div>
@@ -333,11 +352,15 @@ function ConfigureOAuth2Connection({
             </a>
             <button
                 style={{ marginTop: "0.5rem" }}
+                className={styles.secondaryButton}
                 onClick={() => onClickDelete(connectionId)}
             >
                 Cancel
             </button>
-            <button style={{ marginTop: "0.5rem" }} onClick={onClickBack}>
+            <button
+                className={`${styles.secondaryButton} ${styles.bigButton}`}
+                onClick={onClickBack}
+            >
                 Back
             </button>
         </div>
@@ -353,6 +376,13 @@ export function ConnectionManager() {
     const createConnection = useCreateConnection();
     const deleteConnection = useDeleteConnection();
 
+    const titles: Record<Screen | "default", string> = {
+        default: "Connection Manager",
+        list: "Connection Manager",
+        add: "Add Connection",
+        configure: "Configure Connection",
+    };
+
     function navigateTo(newScreen: Screen) {
         setHistory((history) => [...history, screen]);
         setScreen(newScreen);
@@ -367,12 +397,7 @@ export function ConnectionManager() {
 
     return (
         <div className={styles.root}>
-            <h2 className={styles.title}>
-                Connection Manager ({toTitleCase(screen)})
-            </h2>
-            <p className={styles.description}>
-                Description here lorem ipsum dolor sit amet
-            </p>
+            <h2 className={styles.title}>{titles[screen] ?? titles.default}</h2>
 
             <div className={styles.content}>
                 {screen === "list" && (
@@ -414,7 +439,7 @@ export function ConnectionManager() {
             <p className={styles.footer}>
                 Powered by{" "}
                 <a href="//tractorbeam.ai" className={styles.footerLink}>
-                    Tractorbeam
+                    Tractorbeam 🛸
                 </a>
             </p>
         </div>

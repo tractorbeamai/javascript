@@ -17,10 +17,21 @@ export const TractorbeamConfigContext =
 
 export type TractorbeamTheme = {
     primaryColor?: string;
+    primaryForegroundColor?: string;
+    secondaryColor?: string;
+    secondaryForegroundColor?: string;
+    mutedColor?: string;
+    borderColor?: string;
+    errorColor?: string;
 };
 
 const defaultTheme: TractorbeamTheme = {
-    primaryColor: "red",
+    primaryColor: "#000000",
+    primaryForegroundColor: "#ffffff",
+    secondaryColor: "rgb(228, 228, 231)",
+    secondaryForegroundColor: "hsl(240 5.9% 10%)",
+    borderColor: "#eaeaea",
+    errorColor: "red",
 };
 
 type TractorbeamProviderProps = Pick<TractorbeamConfig, "token"> &
