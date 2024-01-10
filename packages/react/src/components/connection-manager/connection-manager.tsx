@@ -34,8 +34,8 @@ type Connection = {
         name: string;
     };
 
-    oauth2_access_token?: string;
-    oauth2_refresh_token?: string;
+    oauth2_accessToken?: string;
+    oauth2_refreshToken?: string;
     oauth2_expiresAt?: string;
     oauth2_scope?: string;
 
@@ -60,7 +60,7 @@ function useConnections() {
     return { connections: data, ...rest };
 }
 
-function useConnection(connectionId: number) {
+function useConnection(connectionId: Connection["id"]) {
     const { data, ...rest } = useAPI<Connection>(
         `/api/client/connections/${connectionId}`,
     );
@@ -70,7 +70,10 @@ function useConnection(connectionId: number) {
 function useCreateConnection() {
     const { apiURL, token } = useTractorbeamConfig();
 
-    return async (body: { identity: string; providerConfigId: number }) => {
+    return async (body: {
+        identity: Connection["identity"];
+        providerConfigId: Connection["providerConfigId"];
+    }) => {
         const res = await fetch(`${apiURL}/api/client/connections`, {
             method: "POST",
             body: JSON.stringify(body),
@@ -239,7 +242,7 @@ function ConfigureConnection({
     return <pre>{JSON.stringify(connection, null, 2)}</pre>;
 }
 
-function useOAuth2AuthorizeURL(connectionId: number) {
+function useOAuth2AuthorizeURL(connectionId: Connection["id"]) {
     const { data, ...rest } = useAPI<{ url: string }>(
         `/api/client/connections/${connectionId}/oauth2/authorize`,
     );
@@ -268,7 +271,8 @@ function ConfigureOAuth2Connection({
         return <div className={styles.listLoading}>Loading...</div>;
     }
 
-    const isConnected = !!connection.oauth2_access_token;
+    const isConnected = !!connection.oauth2_accessToken;
+
     if (isConnected) {
         return (
             <div className={styles.listEmpty}>
@@ -312,7 +316,8 @@ function ConfigureOAuth2Connection({
 }
 
 export function ConnectionManager() {
-    const [screen, setScreen] = useState<"list" | "add" | "configure">("list");
+    type Screen = "list" | "add" | "configure";
+    const [screen, setScreen] = useState<Screen>("list");
     const [connectionId, setConnectionId] = useState<number | null>(null);
     const { identity, token, apiURL } = useTractorbeamConfig();
     const createConnection = useCreateConnection();
