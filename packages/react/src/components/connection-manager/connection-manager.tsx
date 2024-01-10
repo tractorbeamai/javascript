@@ -318,9 +318,22 @@ function ConfigureOAuth2Connection({
 export function ConnectionManager() {
     type Screen = "list" | "add" | "configure";
     const [screen, setScreen] = useState<Screen>("list");
+    const [history, setHistory] = useState<Screen[]>([]);
     const [connectionId, setConnectionId] = useState<number | null>(null);
     const { identity, token, apiURL } = useTractorbeamConfig();
     const createConnection = useCreateConnection();
+
+    function navigateTo(newScreen: Screen) {
+        setHistory((history) => [...history, screen]);
+        setScreen(newScreen);
+    }
+
+    function navigateBack() {
+        const newHistory = [...history];
+        const lastPage = newHistory.pop();
+        setHistory(newHistory);
+        setScreen(lastPage ?? "list");
+    }
 
     return (
         <div className={styles.root}>
@@ -332,31 +345,30 @@ export function ConnectionManager() {
             <div className={styles.content}>
                 {screen === "list" && (
                     <ConnectionsList
-                        onClickAdd={() => setScreen("add")}
+                        onClickAdd={() => navigateTo("add")}
                         onClickEdit={(connectionId) => {
                             setConnectionId(connectionId);
-                            setScreen("configure");
+                            navigateTo("configure");
                         }}
                     />
                 )}
                 {screen === "add" && (
                     <AddConnection
-                        onClickBack={() => setScreen("list")}
+                        onClickBack={navigateBack}
                         onClickConnect={async (id) => {
                             const c = await createConnection({
                                 identity: identity,
                                 providerConfigId: id,
                             });
                             setConnectionId(c.id);
-                            setScreen("configure");
-                            console.log(c);
+                            navigateTo("configure");
                         }}
                     />
                 )}
                 {screen === "configure" && (
                     <ConfigureConnection
                         connectionId={connectionId}
-                        onClickBack={() => setScreen("add")}
+                        onClickBack={navigateBack}
                         onConnect={async () => {}}
                     />
                 )}
