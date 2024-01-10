@@ -89,6 +89,25 @@ function useCreateConnection() {
     };
 }
 
+function useDeleteConnection() {
+    const { apiURL, token } = useTractorbeamConfig();
+
+    return async (connectionId: Connection["id"]) => {
+        const res = await fetch(
+            `${apiURL}/api/client/connections/${connectionId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        );
+
+        return res.ok;
+    };
+}
+
 function toTitleCase(str: string) {
     return str[0].toUpperCase() + str.slice(1);
 }
@@ -212,10 +231,12 @@ function AddConnection({
 function ConfigureConnection({
     connectionId,
     onClickBack,
+    onClickDelete,
     onConnect,
 }: {
     connectionId: number;
     onClickBack: () => void;
+    onClickDelete: (connectionId: Connection["id"]) => void;
     onConnect: () => void;
 }) {
     const config = useTractorbeamConfig();
@@ -234,6 +255,7 @@ function ConfigureConnection({
         return (
             <ConfigureOAuth2Connection
                 connectionId={connectionId}
+                onClickDelete={onClickDelete}
                 onClickBack={onClickBack}
             />
         );
@@ -251,11 +273,11 @@ function useOAuth2AuthorizeURL(connectionId: Connection["id"]) {
 
 function ConfigureOAuth2Connection({
     connectionId,
-    onClickDisconnect,
+    onClickDelete,
     onClickBack,
 }: {
     connectionId: number;
-    onClickDisconnect: (connectionId) => void;
+    onClickDelete: (connectionId: Connection["id"]) => void;
     onClickBack: () => void;
 }) {
     const config = useTractorbeamConfig();
@@ -286,7 +308,7 @@ function ConfigureOAuth2Connection({
                 </p>
                 <button
                     style={{ marginTop: "1rem" }}
-                    onClick={() => onClickDisconnect(connection.id)}
+                    onClick={() => onClickDelete(connection.id)}
                 >
                     Disconnect {toTitleCase(connection.provider.name)}
                 </button>
@@ -308,6 +330,12 @@ function ConfigureOAuth2Connection({
                     Connect with {toTitleCase(connection.provider.name)}
                 </button>
             </a>
+            <button
+                style={{ marginTop: "0.5rem" }}
+                onClick={() => onClickDelete(connectionId)}
+            >
+                Cancel
+            </button>
             <button style={{ marginTop: "0.5rem" }} onClick={onClickBack}>
                 Back
             </button>
@@ -322,6 +350,7 @@ export function ConnectionManager() {
     const [connectionId, setConnectionId] = useState<number | null>(null);
     const { identity, token, apiURL } = useTractorbeamConfig();
     const createConnection = useCreateConnection();
+    const deleteConnection = useDeleteConnection();
 
     function navigateTo(newScreen: Screen) {
         setHistory((history) => [...history, screen]);
@@ -369,6 +398,11 @@ export function ConnectionManager() {
                     <ConfigureConnection
                         connectionId={connectionId}
                         onClickBack={navigateBack}
+                        onClickDelete={async (connectionId) => {
+                            await deleteConnection(connectionId);
+                            setConnectionId(null);
+                            navigateBack();
+                        }}
                         onConnect={async () => {}}
                     />
                 )}
