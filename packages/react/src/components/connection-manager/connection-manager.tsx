@@ -306,6 +306,7 @@ function ConfigureOAuth2Connection({
                     You are connected to {toTitleCase(connection.provider.name)}
                     .
                 </p>
+                <p>Connection ID: {connection.id}</p>
                 <button
                     style={{ marginTop: "1rem" }}
                     onClick={() => onClickDelete(connection.id)}
@@ -366,7 +367,9 @@ export function ConnectionManager() {
 
     return (
         <div className={styles.root}>
-            <h2 className={styles.title}>Connection Manager</h2>
+            <h2 className={styles.title}>
+                Connection Manager ({toTitleCase(screen)})
+            </h2>
             <p className={styles.description}>
                 Description here lorem ipsum dolor sit amet
             </p>
