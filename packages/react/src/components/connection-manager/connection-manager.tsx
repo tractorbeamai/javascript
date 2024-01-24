@@ -51,12 +51,12 @@ type Connection = {
 };
 
 function useProviders() {
-    const { data, ...rest } = useAPI<Provider[]>("/api/client/providers");
+    const { data, ...rest } = useAPI<Provider[]>("/api/client/providers/");
     return { providers: data, ...rest };
 }
 
 function useConnections() {
-    const { data, ...rest } = useAPI<Connection[]>(`/api/client/connections`);
+    const { data, ...rest } = useAPI<Connection[]>(`/api/client/connections/`);
     return { connections: data, ...rest };
 }
 
@@ -74,7 +74,7 @@ function useCreateConnection() {
         identity: Connection["identity"];
         providerConfigId: Connection["providerConfigId"];
     }) => {
-        const res = await fetch(`${apiURL}/api/client/connections`, {
+        const res = await fetch(`${apiURL}/api/client/connections/`, {
             method: "POST",
             body: JSON.stringify(body),
             headers: {
@@ -94,7 +94,7 @@ function useDeleteConnection() {
 
     return async (connectionId: Connection["id"]) => {
         const res = await fetch(
-            `${apiURL}/api/client/connections/${connectionId}`,
+            `${apiURL}/api/client/connections/${connectionId}/`,
             {
                 method: "DELETE",
                 headers: {
@@ -130,9 +130,9 @@ function ConnectionsList({
         return <div className={styles.listLoading}>Loading...</div>;
     }
 
-    const filteredConnections = connections.filter(
-        (c) => c.status !== "pending",
-    );
+    const filteredConnections = connections.length
+        ? connections.filter((c) => c.status !== "pending")
+        : [];
 
     if (filteredConnections.length === 0) {
         return (
@@ -281,7 +281,7 @@ function ConfigureConnection({
 
 function useOAuth2AuthorizeURL(connectionId: Connection["id"]) {
     const { data, ...rest } = useAPI<{ url: string }>(
-        `/api/client/connections/${connectionId}/oauth2/authorize`,
+        `/api/client/connections/${connectionId}/oauth2/authorize/`,
     );
     return { url: data?.url, ...rest };
 }
