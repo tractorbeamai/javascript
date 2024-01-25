@@ -1,6 +1,6 @@
 import { useAPI } from "@/hooks/use-api";
 import styles from "./connection-manager.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTractorbeamConfig } from "@/hooks/use-tractorbeam-config";
 import { create } from "domain";
 import { SWRConfiguration } from "swr";
@@ -11,7 +11,6 @@ type ProviderConfig = {
     provider: {
         logo_url: string;
         name: string;
-        type: "oauth2" | "credentials" | "secret" | "custom";
     };
 };
 
@@ -42,12 +41,11 @@ type Connection = {
     updated_at: string;
 };
 
-function useProviderConfigs(options?: SWRConfiguration<ProviderConfig[]>) {
+function useProviders() {
     const { data, ...rest } = useAPI<ProviderConfig[]>(
         "/api/client/provider-configs/",
-        options,
     );
-    return { providerConfigs: data, ...rest };
+    return { providers: data, ...rest };
 }
 
 function useConnections(options?: SWRConfiguration<Connection[]>) {
@@ -77,7 +75,7 @@ function useCreateConnection() {
         providerConfig,
     }: {
         identity: Connection["identity"];
-        providerConfig: Connection["provider_config"];
+        provider_config: Connection["provider_config"];
     }) => {
         const res = await fetch(`${apiURL}/api/client/connections/`, {
             method: "POST",
@@ -242,8 +240,8 @@ function AddConnection({
     return (
         <>
             <ul className={styles.providerList}>
-                {provider_configs.map((pc) => (
-                    <li key={pc.id}>
+                {providers.map((p) => (
+                    <li key={p.providerConfigId}>
                         <div className={styles.provider}>
                             <img
                                 className={styles.providerLogo}
@@ -254,7 +252,9 @@ function AddConnection({
                             </div>
                             <button
                                 className={styles.providerButton}
-                                onClick={() => onClickConnect(pc.id)}
+                                onClick={() =>
+                                    onClickConnect(p.providerConfigId)
+                                }
                             >
                                 Connect
                             </button>
@@ -475,10 +475,9 @@ export function ConnectionManager() {
                     <AddConnection
                         onClickBack={navigateBack}
                         onClickConnect={async (id) => {
-                            console.log("onClickConnect", id, identity);
                             const c = await createConnection({
                                 identity: identity,
-                                providerConfig: id,
+                                provider_config: providerConfigId,
                             });
                             setConnectionId(c.id);
                             navigateTo("configure");
