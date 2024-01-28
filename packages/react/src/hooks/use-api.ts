@@ -1,7 +1,7 @@
-import useSWR from "swr";
+import useSWR, { SWRConfiguration, SWRHook } from "swr";
 import { useTractorbeamConfig } from "./use-tractorbeam-config";
 
-export function useAPI<T>(path: string) {
+export function useAPI<T>(path: string, options?: SWRConfiguration<T>) {
     const { token, apiURL } = useTractorbeamConfig();
 
     return useSWR<T>(`${apiURL}${path}`, (url: string) =>
@@ -10,5 +10,6 @@ export function useAPI<T>(path: string) {
                 Authorization: `Bearer ${token}`,
             },
         }).then((res) => res.json()),
+        options
     );
 }

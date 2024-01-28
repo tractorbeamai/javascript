@@ -124,3 +124,7 @@ button {
     font-weight: bold;
     text-decoration: none;
 }
+
+a {
+    all: unset;
+}

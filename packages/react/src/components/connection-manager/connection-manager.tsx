@@ -3,9 +3,10 @@ import styles from "./connection-manager.module.css";
 import { useEffect, useState } from "react";
 import { useTractorbeamConfig } from "@/hooks/use-tractorbeam-config";
 import { create } from "domain";
+import { SWRConfiguration } from "swr";
 
 type Provider = {
-    providerConfigId: number;
+    provider_config: number;
     type: "oauth2" | "credentials" | "secret" | "custom";
     provider: {
         name: string;
@@ -15,7 +16,7 @@ type Provider = {
 
 type ProviderConfig = {
     id: number;
-    projectId: number;
+    project: number;
     provider: {
         logo: string;
         name: string;
@@ -26,7 +27,7 @@ type ProviderConfig = {
 type Connection = {
     id: number;
     identity: string;
-    providerConfigId: number;
+    provider_config: number;
     type: "oauth2" | "credentials" | "secret" | "custom";
     status: "pending" | "active" | "failed";
     provider: {
@@ -34,9 +35,9 @@ type Connection = {
         name: string;
     };
 
-    oauth2_accessToken?: string;
-    oauth2_refreshToken?: string;
-    oauth2_expiresAt?: string;
+    oauth2_access_token?: string;
+    oauth2_refresh_token?: string;
+    oauth2_expires_at?: string;
     oauth2_scope?: string;
 
     credentials_username?: string;
@@ -44,25 +45,26 @@ type Connection = {
 
     secret_secret?: string;
 
-    custom_jsonContents?: string;
+    custom_json_data?: string;
 
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
 };
 
-function useProviders() {
-    const { data, ...rest } = useAPI<Provider[]>("/api/client/providers/");
+function useProviders(options?: SWRConfiguration<Provider[]>) {
+    const { data, ...rest } = useAPI<Provider[]>("/api/client/provider-configs/", options);
     return { providers: data, ...rest };
 }
 
-function useConnections() {
-    const { data, ...rest } = useAPI<Connection[]>(`/api/client/connections/`);
+function useConnections(options?: SWRConfiguration<Connection[]>) {
+    const { data, ...rest } = useAPI<Connection[]>(`/api/client/connections/`, options);
     return { connections: data, ...rest };
 }
 
-function useConnection(connectionId: Connection["id"]) {
+function useConnection(connectionId: Connection["id"], options?: SWRConfiguration<Connection>) {
     const { data, ...rest } = useAPI<Connection>(
         `/api/client/connections/${connectionId}`,
+        options,
     );
     return { connection: data, ...rest };
 }
@@ -70,13 +72,16 @@ function useConnection(connectionId: Connection["id"]) {
 function useCreateConnection() {
     const { apiURL, token } = useTractorbeamConfig();
 
-    return async (body: {
+    return async ({identity, provider_config}: {
         identity: Connection["identity"];
-        providerConfigId: Connection["providerConfigId"];
+        provider_config: Connection["provider_config"];
     }) => {
         const res = await fetch(`${apiURL}/api/client/connections/`, {
             method: "POST",
-            body: JSON.stringify(body),
+            body: JSON.stringify({
+                identity,
+                provider_config,
+            }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -153,7 +158,7 @@ function ConnectionsList({
                         <div className={styles.provider}>
                             <img
                                 className={styles.providerLogo}
-                                src={`${apiURL}${connection.provider.logo}`}
+                                src={`${apiURL}${connection.provider?.logo}`}
                             />
                             <div className={styles.providerName}>
                                 {toTitleCase(connection.provider.name)}
@@ -180,20 +185,20 @@ function AddConnection({
     onClickConnect,
 }: {
     onClickBack: () => void;
-    onClickConnect: (providerConfigId: number) => void;
+    onClickConnect: (provider_config: number) => void;
 }) {
-    const { providers, error } = useProviders();
+    const { providers: provider_configs, error } = useProviders();
     const { apiURL } = useTractorbeamConfig();
 
     if (error) {
         return <div className={styles.listError}>{error.message}</div>;
     }
 
-    if (!providers) {
+    if (!provider_configs) {
         return <div className={styles.listLoading}>Loading...</div>;
     }
 
-    if (providers.length === 0) {
+    if (provider_configs.length === 0) {
         return (
             <div className={styles.listEmpty}>
                 <p>No Providers Configured.</p>
@@ -211,21 +216,21 @@ function AddConnection({
     return (
         <>
             <ul className={styles.providerList}>
-                {providers.map((p) => (
-                    <li key={p.providerConfigId}>
+                {provider_configs.map((pc) => (
+                    <li key={pc.id}>
                         <div className={styles.provider}>
                             <img
                                 className={styles.providerLogo}
-                                src={`${apiURL}${p.provider.logo}`}
+                                src={`${apiURL}${pc.provider.logo}`}
                             />
                             <div className={styles.providerName}>
-                                {toTitleCase(p.provider.name)}
+                                {toTitleCase(pc.provider.name)}
                             </div>
                             <button
                                 className={styles.providerButton}
-                                onClick={() =>
-                                    onClickConnect(p.providerConfigId)
-                                }
+                                onClick={() => 
+                                    onClickConnect(pc.id)
+                                     }
                             >
                                 Connect
                             </button>
@@ -255,6 +260,7 @@ function ConfigureConnection({
     onConnect: () => void;
 }) {
     const config = useTractorbeamConfig();
+    console.log("ConfigureConnection", connectionId)
     const { connection, error } = useConnection(connectionId);
 
     if (error) {
@@ -279,10 +285,11 @@ function ConfigureConnection({
     return <pre>{JSON.stringify(connection, null, 2)}</pre>;
 }
 
-function useOAuth2AuthorizeURL(connectionId: Connection["id"]) {
+function useOAuth2AuthorizeURL(connectionId: Connection["id"], options?: SWRConfiguration<{ url: string }>) {
     const { data, ...rest } = useAPI<{ url: string }>(
-        `/api/client/connections/${connectionId}/oauth2/authorize/`,
+        `/api/client/connections/${connectionId}/oauth2/authorize/`, options,
     );
+    console.log("data", data)
     return { url: data?.url, ...rest };
 }
 
@@ -296,7 +303,7 @@ function ConfigureOAuth2Connection({
     onClickBack: () => void;
 }) {
     const config = useTractorbeamConfig();
-    const { connection, error: connectionError } = useConnection(connectionId);
+    const { connection, error: connectionError } = useConnection(connectionId, { refreshInterval: 500 });
     const { url, error: urlError } = useOAuth2AuthorizeURL(connectionId);
 
     if (connectionError || urlError) {
@@ -304,17 +311,21 @@ function ConfigureOAuth2Connection({
         return <div className={styles.listError}>{error.message}</div>;
     }
 
+    console.log("url", url)
+
+    console.log("connection", connection)
+
     if (!url || !connection) {
         return <div className={styles.listLoading}>Loading...</div>;
     }
 
-    const isConnected = !!connection.oauth2_accessToken;
+    const isConnected = !!connection.oauth2_access_token;
 
     if (isConnected) {
         return (
             <div className={styles.listEmpty}>
                 <img
-                    src={`${config.apiURL}${connection.provider.logo}`}
+                    src={`${config.apiURL}${connection.provider?.logo}`}
                     className={styles.largeLogo}
                 />
                 <p>
@@ -342,7 +353,7 @@ function ConfigureOAuth2Connection({
     return (
         <div className={styles.listEmpty}>
             <img
-                src={`${config.apiURL}${connection.provider.logo}`}
+                src={`${config.apiURL}${connection.provider?.logo}`}
                 className={styles.largeLogo}
             />
             <a href={url} target="_blank">
@@ -413,9 +424,10 @@ export function ConnectionManager() {
                     <AddConnection
                         onClickBack={navigateBack}
                         onClickConnect={async (id) => {
+                            console.log("onClickConnect", id, identity)
                             const c = await createConnection({
                                 identity: identity,
-                                providerConfigId: id,
+                                provider_config: id,
                             });
                             setConnectionId(c.id);
                             navigateTo("configure");
