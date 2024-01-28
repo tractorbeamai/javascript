@@ -30,7 +30,7 @@ export default [
             }),
             resolve({
                 browser: true,
-                preferBuiltins: true
+                preferBuiltins: true,
             }),
             commonjs(),
             typescript({
