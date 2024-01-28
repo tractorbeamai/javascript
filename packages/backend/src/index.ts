@@ -4,6 +4,7 @@ export class TractorbeamAI {
     constructor(
         private readonly apiKey: string,
         private readonly apiSecret: string,
+        private readonly apiRoot: string = "https://api.tractorbeam.ai",
     ) {}
 
     private async getSecretKey(): Promise<jose.KeyLike> {
@@ -15,6 +16,7 @@ export class TractorbeamAI {
         const key = jose.importPKCS8(decodedKey, "RS256");
         return key;
     }
+
     public async createToken(opts: {
         identity: string;
         projectId: number;
@@ -26,6 +28,48 @@ export class TractorbeamAI {
             .setProtectedHeader({ alg: "RS256" })
             .setExpirationTime("6h");
         return jwt.sign(await this.getSecretKey());
+    }
+
+    public async query(
+        opts:
+            | {
+                  token?: never;
+                  identity: string;
+                  projectId: number;
+                  query: string;
+              }
+            | {
+                  token: string;
+                  identity?: never;
+                  projectId?: never;
+                  query: string;
+              },
+    ): Promise<any> {
+        const res = await fetch(`${this.apiRoot}/client/query/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${
+                    opts.token
+                        ? opts.token
+                        : this.createToken({
+                              identity: opts.identity,
+                              projectId: opts.projectId,
+                          })
+                }`,
+            },
+            body: JSON.stringify({
+                query: opts.query,
+            }),
+        });
+
+        if (!res.ok) {
+            throw new Error(
+                `Failed to query Tractorbeam API: ${res.status} ${res.statusText}`,
+            );
+        }
+
+        return res.json();
     }
 
     public async decodeToken(token: string): Promise<any> {
