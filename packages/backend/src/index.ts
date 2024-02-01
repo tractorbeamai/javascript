@@ -1,6 +1,6 @@
 import * as jose from "jose";
 
-export class TractorbeamAI {
+export default class TractorbeamAI {
     constructor(
         private readonly publishableKey: string,
         private readonly secretKey: string,
