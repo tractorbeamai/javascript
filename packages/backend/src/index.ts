@@ -16,12 +16,8 @@ export class TractorbeamAI {
         const key = jose.importPKCS8(decodedKey, "RS256");
         return key;
     }
-
-    public async createToken(opts: {
-        identity: string;
-        projectId: number;
-    }): Promise<string> {
-        const jwt = new jose.SignJWT({ projectId: opts.projectId })
+    public async createToken(opts: { identity: string }): Promise<string> {
+        const jwt = new jose.SignJWT()
             .setSubject(opts.identity)
             .setIssuer(this.publishableKey)
             .setIssuedAt()
@@ -54,7 +50,6 @@ export class TractorbeamAI {
                         ? opts.token
                         : this.createToken({
                               identity: opts.identity,
-                              projectId: opts.projectId,
                           })
                 }`,
             },
