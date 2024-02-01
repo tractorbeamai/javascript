@@ -68,21 +68,17 @@ function useConnection(
 }
 
 function useCreateConnection() {
-    const { apiURL, token } = useTractorbeamConfig();
+    const { apiURL, token, identity } = useTractorbeamConfig();
 
     return async ({
-        identity,
-        providerConfig,
+        provider_config,
     }: {
         identity: Connection["identity"];
         provider_config: Connection["provider_config"];
     }) => {
         const res = await fetch(`${apiURL}/api/client/connections/`, {
             method: "POST",
-            body: JSON.stringify({
-                identity: identity,
-                provider_config: providerConfig,
-            }),
+            body: JSON.stringify({ provider_config }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

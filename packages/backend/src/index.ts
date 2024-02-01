@@ -2,8 +2,8 @@ import * as jose from "jose";
 
 export class TractorbeamAI {
     constructor(
-        private readonly apiKey: string,
-        private readonly apiSecret: string,
+        private readonly publishableKey: string,
+        private readonly secretKey: string,
         private readonly apiRoot: string = "https://api.tractorbeam.ai",
     ) {}
 
@@ -11,7 +11,7 @@ export class TractorbeamAI {
         // The API secret is prefixed with "sk_" to indicate that it is a secret
         // key. This prefix is added *after* the key is base64 encoded, so we
         // need to remove it before decoding.
-        const base64Key = this.apiSecret.slice(3);
+        const base64Key = this.secretKey.slice(3);
         const decodedKey = atob(base64Key);
         const key = jose.importPKCS8(decodedKey, "RS256");
         return key;
@@ -23,7 +23,7 @@ export class TractorbeamAI {
     }): Promise<string> {
         const jwt = new jose.SignJWT({ projectId: opts.projectId })
             .setSubject(opts.identity)
-            .setIssuer(this.apiKey)
+            .setIssuer(this.publishableKey)
             .setIssuedAt()
             .setProtectedHeader({ alg: "RS256" })
             .setExpirationTime("6h");
