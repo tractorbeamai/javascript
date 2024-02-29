@@ -16,6 +16,7 @@ export default class TractorbeamAI {
         const key = jose.importPKCS8(decodedKey, "RS256");
         return key;
     }
+
     public async createToken(opts: { identity: string }): Promise<string> {
         const jwt = new jose.SignJWT()
             .setSubject(opts.identity)
